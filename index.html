@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSC Token Creator - Create Your BEP20 Token</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #F3BA2F;
+            --secondary: #1E2026;
+            --success: #00C851;
+            --danger: #ff4444;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1E2026 0%, #2C3E50 100%);
+            min-height: 100vh;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background: rgba(30, 32, 38, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary) !important;
+            font-size: 1.5rem;
+        }
+        
+        .hero-section {
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, #FFD700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        
+        .form-control, .form-select {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 10px;
+            padding: 12px;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--primary);
+            color: #fff;
+            box-shadow: 0 0 0 0.2rem rgba(243, 186, 47, 0.25);
+        }
+        
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #FFD700 100%);
+            border: none;
+            padding: 12px 40px;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(243, 186, 47, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 12px 40px;
+            font-weight: 600;
+            border-radius: 10px;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+        
+        .info-box {
+            background: rgba(243, 186, 47, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card {
+            padding: 30px;
+            text-align: center;
+            height: 100%;
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .token-preview {
+            background: rgba(0, 200, 81, 0.1);
+            border: 1px solid var(--success);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .network-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--primary);
+            color: #000;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+            border-width: 0.15em;
+        }
+        
+        .transaction-link {
+            word-break: break-all;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .transaction-link:hover {
+            text-decoration: underline;
+        }
+        
+        #walletAddress {
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        
+        .footer {
+            margin-top: 80px;
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">🚀 BSC Token Creator</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#create">Create Token</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <button id="connectWalletBtn" class="btn btn-primary btn-sm">Connect Wallet</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">Create Your BEP20 Token</h1>
+            <p class="lead">No coding required. Deploy your token on Binance Smart Chain in minutes.</p>
+            <div class="mt-3">
+                <span class="network-badge">Binance Smart Chain</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container pb-5">
+        <!-- Wallet Status -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div id="walletDisconnected">
+                            <h5>👛 Connect Your Wallet to Get Started</h5>
+                            <p class="mb-0 text-muted">MetaMask or any Web3 wallet required</p>
+                        </div>
+                        <div id="walletConnected" style="display: none;">
+                            <h6>✅ Wallet Connected</h6>
+                            <p class="mb-0" id="walletAddress"></p>
+                            <small class="text-muted">Network: <span id="networkName">-</span></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Token Creation Form -->
+        <div class="row" id="create">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-body p-4">
+                        <h3 class="mb-4">🎯 Token Configuration</h3>
+                        
+                        <div class="info-box">
+                            <strong>ℹ️ Important:</strong> Make sure you're connected to BSC Mainnet. Factory fee: <strong id="factoryFee">0.01 BNB</strong>
+                        </div>
+
+                        <form id="tokenForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="tokenName" class="form-label">Token Name *</label>
+                                    <input type="text" class="form-control" id="tokenName" placeholder="e.g., My Awesome Token" required>
+                                    <small class="text-muted">Full name of your token</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="tokenSymbol" class="form-label">Token Symbol *</label>
+                                    <input type="text" class="form-control" id="tokenSymbol" placeholder="e.g., MAT" maxlength="10" required>
+                                    <small class="text-muted">Ticker symbol (3-5 characters)</small>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="totalSupply" class="form-label">Total Supply *</label>
+                                    <input type="number" class="form-control" id="totalSupply" placeholder="e.g., 1000000" min="1" required>
+                                    <small class="text-muted">Total number of tokens to create</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="decimals" class="form-label">Decimals *</label>
+                                    <select class="form-select" id="decimals" required>
+                                        <option value="18" selected>18 (Standard)</option>
+                                        <option value="9">9</option>
+                                        <option value="8">8</option>
+                                        <option value="6">6</option>
+                                        <option value="0">0 (No decimals)</option>
+                                    </select>
+                                    <small class="text-muted">18 is standard for most tokens</small>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-warning" role="alert" id="warningAlert" style="display: none;">
+                                <strong>⚠️ Warning:</strong> <span id="warningMessage"></span>
+                            </div>
+
+                            <div class="alert alert-danger" role="alert" id="errorAlert" style="display: none;">
+                                <strong>❌ Error:</strong> <span id="errorMessage"></span>
+                            </div>
+
+                            <div class="alert alert-success" role="alert" id="successAlert" style="display: none;">
+                                <strong>✅ Success!</strong> <span id="successMessage"></span>
+                                <div class="mt-2">
+                                    <a href="#" id="bscscanLink" target="_blank" class="transaction-link">View on BscScan →</a>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg" id="createTokenBtn">
+                                    <span id="btnText">🚀 Create Token</span>
+                                    <span id="btnSpinner" style="display: none;">
+                                        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                        Processing...
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Token Preview -->
+                        <div id="tokenPreview" class="token-preview" style="display: none;">
+                            <h5>📋 Token Preview</h5>
+                            <div class="row mt-3">
+                                <div class="col-6"><strong>Name:</strong></div>
+                                <div class="col-6" id="previewName">-</div>
+                                <div class="col-6"><strong>Symbol:</strong></div>
+                                <div class="col-6" id="previewSymbol">-</div>
+                                <div class="col-6"><strong>Total Supply:</strong></div>
+                                <div class="col-6" id="previewSupply">-</div>
+                                <div class="col-6"><strong>Decimals:</strong></div>
+                                <div class="col-6" id="previewDecimals">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="row mt-5" id="features">
+            <div class="col-12 text-center mb-4">
+                <h2>✨ Why Choose Our Platform?</h2>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h4>Lightning Fast</h4>
+                    <p>Deploy your token in under 2 minutes. No technical knowledge required.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h4>Secure & Audited</h4>
+                    <p>Battle-tested smart contracts following industry best practices.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h4>Low Fees</h4>
+                    <p>Transparent pricing with no hidden costs. Only pay for gas + factory fee.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <p class="mb-0">&copy; 2024 BSC Token Creator. All rights reserved.</p>
+            <small class="text-muted">Powered by Binance Smart Chain</small>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    
+    <script>
+        // Factory Contract Configuration
+        const FACTORY_ADDRESS = 'YOUR_DEPLOYED_FACTORY_ADDRESS_HERE'; // Replace after deployment
+        const BSC_MAINNET_CHAIN_ID = '0x38'; // 56 in hex
+        const BSC_TESTNET_CHAIN_ID = '0x61'; // 97 in hex
+        const CREATION_FEE = '0.01'; // BNB
+
+        // Factory Contract ABI (minimal for interaction)
+        const FACTORY_ABI = [
+            "function createToken(string memory name_, string memory symbol_, uint8 decimals_, uint256 totalSupply_) external payable returns (address)",
+            "function creationFee() external view returns (uint256)",
+            "function getUserTokens(address user) external view returns (address[] memory)",
+            "event TokenCreated(address indexed tokenAddress, address indexed creator, string name, string symbol, uint256 totalSupply, uint256 timestamp)"
+        ];
+
+        let provider;
+        let signer;
+        let userAddress;
+        let factoryContract;
+
+        // DOM Elements
+        const connectWalletBtn = document.getElementById('connectWalletBtn');
+        const walletDisconnected = document.getElementById('walletDisconnected');
+        const walletConnected = document.getElementById('walletConnected');
+        const walletAddressEl = document.getElementById('walletAddress');
+        const networkNameEl = document.getElementById('networkName');
+        const tokenForm = document.getElementById('tokenForm');
+        const createTokenBtn = document.getElementById('createTokenBtn');
+        const btnText = document.getElementById('btnText');
+        const btnSpinner = document.getElementById('btnSpinner');
+        const errorAlert = document.getElementById('errorAlert');
+        const errorMessage = document.getElementById('errorMessage');
+        const successAlert = document.getElementById('successAlert');
+        const successMessage = document.getElementById('successMessage');
+        const warningAlert = document.getElementById('warningAlert');
+        const warningMessage = document.getElementById('warningMessage');
+        const bscscanLink = document.getElementById('bscscanLink');
+        const tokenPreview = document.getElementById('tokenPreview');
+
+        // Initialize
+        async function init() {
+            if (typeof window.ethereum !== 'undefined') {
+                console.log('MetaMask detected');
+                
+                // Check if already connected
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                if (accounts.length > 0) {
+                    await connectWallet();
+                }
+
+                // Listen for account changes
+                window.ethereum.on('accountsChanged', handleAccountsChanged);
+                window.ethereum.on('chainChanged', () => window.location.reload());
+            } else {
+                showError('Please install MetaMask to use this application');
+            }
+        }
+
+        // Connect Wallet
+        connectWalletBtn.addEventListener('click', connectWallet);
+
+        async function connectWallet() {
+            try {
+                if (typeof window.ethereum === 'undefined') {
+                    showError('MetaMask is not installed');
+                    return;
+                }
+
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                signer = provider.getSigner();
+                userAddress = accounts[0];
+
+                // Check network
+                const network = await provider.getNetwork();
+                const chainId = '0x' + network.chainId.toString(16);
+                
+                if (chainId !== BSC_MAINNET_CHAIN_ID && chainId !== BSC_TESTNET_CHAIN_ID) {
+                    showWarning('Please switch to Binance Smart Chain network');
+                    await switchToBSC();
+                    return;
+                }
+
+                // Initialize factory contract
+                factoryContract = new ethers.Contract(FACTORY_ADDRESS, FACTORY_ABI, signer);
+
+                // Update UI
+                walletAddressEl.textContent = `${userAddress.substring(0, 6)}...${userAddress.substring(38)}`;
+                networkNameEl.textContent = chainId === BSC_MAINNET_CHAIN_ID ? 'BSC Mainnet' : 'BSC Testnet';
+                walletDisconnected.style.display = 'none';
+                walletConnected.style.display = 'block';
+                connectWalletBtn.textContent = 'Connected';
+                connectWalletBtn.disabled = true;
+
+                hideError();
+                hideWarning();
+
+            } catch (error) {
+                console.error('Connection error:', error);
+                showError(error.message);
+            }
+        }
+
+        async function switchToBSC() {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: BSC_MAINNET_CHAIN_ID }],
+                });
+            } catch (switchError) {
+                // Chain not added, try to add it
+                if (switchError.code === 4902) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: BSC_MAINNET_CHAIN_ID,
+                                chainName: 'Binance Smart Chain',
+                                nativeCurrency: {
+                                    name: 'BNB',
+                                    symbol: 'BNB',
+                                    decimals: 18
+                                },
+                                rpcUrls: ['https://bsc-dataseed.binance.org/'],
+                                blockExplorerUrls: ['https://bscscan.com/']
+                            }]
+                        });
+                    } catch (addError) {
+                        showError('Failed to add BSC network');
+                    }
+                }
+            }
+        }
+
+        function handleAccountsChanged(accounts) {
+            if (accounts.length === 0) {
+                walletDisconnected.style.display = 'block';
+                walletConnected.style.display = 'none';
+                connectWalletBtn.textContent = 'Connect Wallet';
+                connectWalletBtn.disabled = false;
+            } else {
+                window.location.reload();
+            }
+        }
+
+        // Form submission
+        tokenForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!userAddress) {
+                showError('Please connect your wallet first');
+                return;
+            }
+
+            const tokenName = document.getElementById('tokenName').value.trim();
+            const tokenSymbol = document.getElementById('tokenSymbol').value.trim().toUpperCase();
+            const totalSupply = document.getElementById('totalSupply').value;
+            const decimals = document.getElementById('decimals').value;
+
+            // Validation
+            if (!tokenName || !tokenSymbol || !totalSupply) {
+                showError('Please fill in all required fields');
+                return;
+            }
+
+            if (tokenSymbol.length < 2 || tokenSymbol.length > 10) {
+                showError('Token symbol must be between 2 and 10 characters');
+                return;
+            }
+
+            if (parseInt(totalSupply) <= 0) {
+                showError('Total supply must be greater than 0');
+                return;
+            }
+
+            await createToken(tokenName, tokenSymbol, decimals, totalSupply);
+        });
+
+        // Create Token Function
+        async function createToken(name, symbol, decimals, supply) {
+            try {
+                hideError();
+                hideSuccess();
+                hideWarning();
+                setLoading(true);
+
+                // Get current fee from contract
+                const currentFee = await factoryContract.creationFee();
+                const feeInBNB = ethers.utils.formatEther(currentFee);
+                
+                console.log(`Creating token: ${name} (${symbol})`);
+                console.log(`Supply: ${supply}, Decimals: ${decimals}`);
+                console.log(`Fee: ${feeInBNB} BNB`);
+
+                // Show preview
+                updatePreview(name, symbol, supply, decimals);
+
+                // Create token transaction
+                const tx = await factoryContract.createToken(
+                    name,
+                    symbol,
+                    parseInt(decimals),
+                    supply,
+                    {
+                        value: currentFee,
+                        gasLimit: 3000000 // Set appropriate gas limit
+                    }
+                );
+
+                console.log('Transaction sent:', tx.hash);
+                showWarning(`Transaction submitted! Hash: ${tx.hash.substring(0, 10)}...`);
+
+                // Wait for confirmation
+                const receipt = await tx.wait();
+                console.log('Transaction confirmed:', receipt);
+
+                // Parse the TokenCreated event
+                const event = receipt.events?.find(e => e.event === 'TokenCreated');
+                const tokenAddress = event?.args?.tokenAddress;
+
+                if (tokenAddress) {
+                    showSuccess(
+                        `Token created successfully! Address: ${tokenAddress}`,
+                        tokenAddress,
+                        receipt.transactionHash
+                    );
+                    tokenForm.reset();
+                } else {
+                    showError('Token created but address not found in events');
+                }
+
+            } catch (error) {
+                console.error('Creation error:', error);
+                
+                let errorMsg = 'Failed to create token';
+                
+                if (error.code === 4001) {
+                    errorMsg = 'Transaction rejected by user';
+                } else if (error.message.includes('insufficient funds')) {
+                    errorMsg = 'Insufficient BNB balance for transaction';
+                } else if (error.message) {
+                    errorMsg = error.message;
+                }
+                
+                showError(errorMsg);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // Helper Functions
+        function setLoading(loading) {
+            createTokenBtn.disabled = loading;
+            btnText.style.display = loading ? 'none' : 'inline';
+            btnSpinner.style.display = loading ? 'inline' : 'none';
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorAlert.style.display = 'block';
+            setTimeout(() => hideError(), 10000);
+        }
+
+        function hideError() {
+            errorAlert.style.display = 'none';
+        }
+
+        function showWarning(message) {
+            warningMessage.textContent = message;
+            warningAlert.style.display = 'block';
+        }
+
+        function hideWarning() {
+            warningAlert.style.display = 'none';
+        }
+
+        function showSuccess(message, tokenAddress, txHash) {
+            successMessage.innerHTML = message;
+            const network = networkNameEl.textContent.includes('Testnet') ? 'testnet.' : '';
+            bscscanLink.href = `https://${network}bscscan.com/address/${tokenAddress}`;
+            bscscanLink.textContent = `View Token on BscScan →`;
+            successAlert.style.display = 'block';
+        }
+
+        function hideSuccess() {
+            successAlert.style.display = 'none';
+        }
+
+        function updatePreview(name, symbol, supply, decimals) {
+            document.getElementById('previewName').textContent = name;
+            document.getElementById('previewSymbol').textContent = symbol;
+            document.getElementById('previewSupply').textContent = parseInt(supply).toLocaleString();
+            document.getElementById('previewDecimals').textContent = decimals;
+            tokenPreview.style.display = 'block';
+        }
+
+        // Input validation and formatting
+        document.getElementById('tokenSymbol').addEventListener('input', (e) => {
+            e.target.value = e.target.value.toUpperCase();
+        });
+
+        document.getElementById('totalSupply').addEventListener('input', (e) => {
+            const value = e.target.value;
+            if (value && parseInt(value) > 1000000000000) {
+                showWarning('Very large supply detected. Make sure this is intentional.');
+            } else {
+                hideWarning();
+            }
+        });
+
+        // Initialize on page load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
